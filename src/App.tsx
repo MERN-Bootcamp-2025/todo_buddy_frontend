@@ -14,7 +14,7 @@ function App() {
           <Routes>
              <Route path="/" element={<Register />} />
              <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/userlist" element={<List />} /> */}
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
        </Router>
     </>

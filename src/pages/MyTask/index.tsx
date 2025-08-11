@@ -28,7 +28,7 @@ const MyTasksPage: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  const fetchTasks = useCallback(
+  const getAllTask = useCallback(
     async (status = "", priority = "") => {
       try {
         const token = localStorage.getItem("token");
@@ -64,19 +64,19 @@ const MyTasksPage: React.FC = () => {
   );
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    getAllTask();
+  }, [getAllTask]);
 
   const handleStatusChange = (selectedStatus: string) => {
     const status = selectedStatus.toLowerCase();
     setStatusFilter(status);
-    fetchTasks(status, priorityFilter);
+    getAllTask(status, priorityFilter);
   };
 
   const handlePriorityChange = (selectedPriority: string) => {
     const priority = selectedPriority.toLowerCase();
     setPriorityFilter(priority);
-    fetchTasks(statusFilter, priority);
+    getAllTask(statusFilter, priority);
   };
 
   const toggleAddModal = () => setAddModalOpen((prev) => !prev);
