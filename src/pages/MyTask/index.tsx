@@ -6,6 +6,8 @@ import Button from "../../components/Button";
 import TaskList from "../../components/TaskList";
 import UserProfile from "../../components/UserProfile";
 import AddTask from "../../components/AddTask";
+import ConfirmDeleteModal from "../../components/DeleteTask";
+import TaskUpdate from "../../components/TaskUpdate/incex";
 // import Modal from "../components/Modal";
 
 
@@ -16,11 +18,27 @@ import AddTask from "../../components/AddTask";
 // }
 
 
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  expected_completion: string;
+  // Add other fields as needed
+}
+
 const MyTask = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+    const [totalPages, setTotalPages] = useState(1);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+
 
   const getAllTodos = async (status = "", priority = "") => {
     try {
@@ -50,6 +68,8 @@ const MyTask = () => {
 
       const data = await response.json();
       setTasks(data.todos || []);
+    
+    setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
@@ -85,16 +105,76 @@ const handlePriorityChange = useCallback(
   const handleModal = () => {
     setIsOpenModal((prev) => !prev);
   };  
-  const handleTodoEdit = () => {
-    setIsOpenModal((prev) => !prev);
+  const handleTodoEdit = (updatedTask: Task) => {
+     setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
   };
+
   const handleClose=()=>{
     setIsOpenModal(false)
   }
+
+    const handleDelete = (id: string) => {
+    setTaskToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+
+   const confirmDelete = async () => {
+    if (!taskToDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      console.log("taskToDelete",taskToDelete)
+      const response = await fetch(
+        `http://localhost:8080/api/todos/${taskToDelete}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to delete task");
+
+      setTasks((prevTasks) =>
+        prevTasks.filter((task) => task.id !== taskToDelete)
+      );
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+  const onEdit = (id: string) => {
+  const task = tasks.find((t) => t.id === id);
+  if (task) {
+    setSelectedTask(task);
+    setIsOpenEditModal(true);
+  }
+};
+const handleEditClose = () => {
+  setIsOpenEditModal(false);
+  setSelectedTask(null);
+};
+  const handleTaskUpdate = (updatedTask: Task) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
   return (
     <>
      
       <UserProfile />
+
+  
       <div className="bg-gray-100 min-h-screen px-8 py-6 mx-auto">
         <div className="flex justify-between items-center  mb-4 max-w-7xl m-auto">
           <h2 className="text-3xl font-bold text-gray-900">My Tasks</h2>
@@ -113,8 +193,16 @@ const handlePriorityChange = useCallback(
         </div>
 
         {isOpenModal && (
-            <AddTask  onClose={handleClose}/>
+            <AddTask  onClose={handleClose} />
         )}
+          {isOpenEditModal && selectedTask && (
+  <TaskUpdate
+    isOpen={isOpenEditModal}
+    onClose={handleEditClose}
+    task={selectedTask}
+    onTaskUpdated={handleTaskUpdate}
+  />
+)}
 
         <div className="bg-white p-5 rounded shadow-sm mt-6 space-y-4  max-w-7xl m-auto">
           <input
@@ -152,12 +240,16 @@ const handlePriorityChange = useCallback(
         </div>
         <div className="mt-6 max-w-7xl m-auto">
 
-          <TaskList tasks={tasks} onEdit={handleTodoEdit} onDelete={function (id: string): void {
-                  throw new Error("Function not implemented.");
-              } } />
+          <TaskList tasks={tasks}  onEdit={onEdit} onTaskUpdate={handleTodoEdit} onDelete={handleDelete} />
         </div>
           
         </div>
+      <ConfirmDeleteModal
+  isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+/>
+
     
     </>
   );
