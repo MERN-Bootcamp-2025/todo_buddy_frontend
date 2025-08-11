@@ -1,158 +1,4 @@
-// // TaskList.tsx
-// import React, { useState } from "react";
-// import { FaEdit, FaTrash } from "react-icons/fa";
-// import Button from "../Button";
-// import CardComponent from "../CardComponent";
 
-// interface Task {
-//   id: string;
-//   title: string;
-//   description: string;
-//   status: string;
-//   priority: string;
-//   expected_completion: string;
-// }
-
-// interface TaskListProps {
-//   tasks: Task[];
-//   onEdit: (id: string) => void;
-//   onDelete: (id: string) => void;
-//     onTaskUpdate: (updatedTask: Task) => void;
-// }
-
-// const statusOptions = ["todo", "in-progress", "done", "on-hold", "will-not-do"];
-// const priorityOptions = ["low", "medium", "high", "critical"];
-
-// const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete, onTaskUpdate }) => {
-//   console.log("tasks", tasks);
-//   const [editingField, setEditingField] = useState<{ id: string; field: "status" | "priority" } | null>(null);
-
-//   const handleChange = async (task: Task, field: "status" | "priority", value: string) => {
-//     try {
-//       const token = localStorage.getItem("token");
-//       const response = await fetch(`http://localhost:8080/api/todo/${task.id}`, {
-//         method: "PATCH",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({
-//           [field]: value,
-//         }),
-//       });
-
-//       if (!response.ok) {
-//         throw new Error("Failed to update task");
-//       }
-
-//       const updatedTask = await response.json();
-//       onTaskUpdate(updatedTask);
-//       setEditingField(null);
-//     } catch (error) {
-//       console.error(error);
-//       alert("Error updating task.");
-//     }
-//   };
-  
-//   return (
-
-//     <div className="space-y-4">
-//       {tasks.map((task) => (
-//         <CardComponent.Body
-//           as="div"
-//           key={task.id}
-//           className="bg-white  p-4 rounded shadow-sm flex justify-between items-flex-start"
-//         >
-//           <div className="flex flex-col gap-2 ">
-//           <div className="mb-3 flex border-red-500 flex-col">
-//             <h3 className="text-xl font-semibold text-gray-900">
-//               {task.title}
-//             </h3>
-//             <p className="text-sm text-gray-600">{task.description}</p>
-//           </div>
-//           <div className="flex w-[200px] justify-between">
-//             <span
-//               className={`text-xs font-medium py-1 px-2 rounded-full ${
-//                 task.status === "todo"
-//                   ? "bg-gray-200 text-gray-800"
-//                   : task.status === "in_progress"
-//                   ? "bg-blue-200 text-blue-800"
-//                   : task.status === "done"
-//                   ? "bg-green-200 text-green-800"
-//                   : task.status === "on-hold"
-//                   ? "bg-orange-200 text-orange-800"
-//                   : task.status === "will-not-do"
-//                   ? "bg-red-200 text-red-800"
-//                   : ""
-//               }`}
-//             >
-//               {task.status.replace("-", " ").toUpperCase()}
-//             </span>
-//             {editingField?.id === task.id && editingField.field === "status" && (
-//                 <select
-//                   className="absolute top-full mt-1 left-0 text-sm border rounded cursor-pointer"
-//                   value={task.status}
-//                   onChange={(e) => handleChange(task, "status", e.target.value)}
-//                   onBlur={() => setEditingField(null)}
-//                 >
-//                   {statusOptions.map((opt) => (
-//                     <option key={opt} value={opt}>
-//                       {opt.replace("-", " ").toUpperCase()}
-//                     </option>
-//                   ))}
-//                 </select>
-//               )}
-//             <span
-//               className={`text-xs font-medium py-1 px-2 rounded-full ${
-//                 task.priority === "low"
-//                   ? "bg-green-200 text-green-800"
-//                   : task.priority === "medium"
-//                   ? "bg-yellow-200 text-yellow-800"
-//                   : task.priority === "high"
-//                   ? "bg-red-200 text-red-800"
-//                   : task.priority === "critical"
-//                   ? "bg-purple-200 text-purple-800"
-//                   : ""
-//               }`}
-//             >
-//               {task.priority.toUpperCase()}
-//             </span>
-//             {editingField?.id === task.id && editingField.field === "priority" && (
-//                 <select
-//                   className="absolute top-full mt-1 left-0 text-sm border rounded"
-//                   value={task.priority}
-//                   onChange={(e) => handleChange(task, "priority", e.target.value)}
-//                   onBlur={() => setEditingField(null)}
-//                 >
-//                   {priorityOptions.map((opt) => (
-//                     <option key={opt} value={opt}>
-//                       {opt.toUpperCase()}
-//                     </option>
-//                   ))}
-//                 </select>
-//               )}
-//               </div> 
-//                </div>
-//              <div className="relative flex gap-5 mt-2 " >
-//                 <Button   onClick={() => onEdit(task.id)}
-//                 className="text-gray-500 hover:text-blue-500"> <FaEdit size={16} /></Button> 
-//                 <Button   onClick={() => onDelete(task.id)}
-//                 className="text-gray-500 hover:text-red-500">  <FaTrash size={16} /></Button>
-//             </div>
-         
-         
-            
-//         </CardComponent.Body>
-//       ))}
-//     </div>
-
-//   );
-// };
-
-// export default TaskList;
-
-
-// TaskList.tsx
 import React, { useState, useRef } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Button from "../Button";
@@ -244,7 +90,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete, onTaskUpda
 
 
 <div className="flex w-[200px] justify-between gap-2 relative">
-  {/* Editable STATUS */}
+
   {editingField?.id === task.id && editingField.field === "status" ? (
     <select
       className="text-xs border rounded px-2 py-1"
@@ -255,7 +101,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete, onTaskUpda
     >
       {statusOptions.map((opt) => (
         <option key={opt} value={opt}>
-          {opt.replace("-", " ").toUpperCase()}
+          {opt.replace("_", " ").toUpperCase()}
         </option>
       ))}
     </select>
@@ -269,18 +115,17 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete, onTaskUpda
           ? "bg-blue-200 text-blue-800"
           : task.status === "done"
           ? "bg-green-200 text-green-800"
-          : task.status === "on-hold"
+          : task.status === "on_hold"
           ? "bg-orange-200 text-orange-800"
-          : task.status === "will-not-do"
+          : task.status === "will_not_do"
           ? "bg-red-200 text-red-800"
           : ""
       }`}
     >
-      {task.status.replace("-", " ").toUpperCase()}
+      {task.status.replace("_", " ").toUpperCase()}
     </span>
   )}
 
-  {/* Editable PRIORITY */}
   {editingField?.id === task.id && editingField.field === "priority" ? (
     <select
       className="text-xs border rounded px-2 py-1"
