@@ -38,6 +38,7 @@ const UserProfile = () => {
 
   return (
     <div className="flex justify-between items-center px-10 py-3 border-b border-gray-200 w-full h-[65px]">
+      {/* Left side: Logo */}
       <div className="flex items-center gap-4">
         <Link to="/" className="flex items-center gap-2">
           <img src="/vite.png" alt="Logo" className="w-6 h-6" />
@@ -45,12 +46,15 @@ const UserProfile = () => {
         </Link>
       </div>
 
-      <div className="flex gap-6 text-sm text-gray-500 ">
+      {/* Middle: Dummy Nav */}
+      <div className="flex gap-6 text-sm text-gray-500 cursor-pointer ">
         <span className="cursor-pointer hover:text-black ">Home</span>
         <span className="cursor-pointer hover:text-black font-semibold text-black">Tasks</span>
         <span className="cursor-pointer hover:text-black">Projects</span>
         <span className="cursor-pointer hover:text-black">Team</span>
       </div>
+
+      {/* Right side: + icon (admin only) and profile dropdown */}
       <div className="flex items-center gap-6">
         {isAdmin && (
           <button className="text-blue-600 text-lg hover:scale-110 transition-transform">
