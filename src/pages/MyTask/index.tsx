@@ -7,7 +7,7 @@ import TaskList from "../../components/TaskList";
 import UserProfile from "../../components/UserProfile";
 import AddTask from "../../components/AddTask";
 import ConfirmDeleteModal from "../../components/DeleteTask";
-import TaskUpdate from "../../components/TaskUpdate/incex";
+import TaskUpdate from "../../components/TaskUpdate";
 
 interface Task {
   id: string;
@@ -157,14 +157,12 @@ const MyTasksPage: React.FC = () => {
             onTaskUpdated={updateTaskInList}
           />
         )}
-
         <div className="bg-white p-5 rounded shadow-sm mt-6 space-y-4">
           <input
             type="text"
             placeholder="Search tasks by name..."
             className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-
           <div className="flex gap-4 mt-2">
             <Dropdown
               options={[

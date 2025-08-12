@@ -38,6 +38,7 @@ function Register() {
       localStorage.setItem("token", accessToken);
       localStorage.setItem("role", user.role);
       localStorage.setItem("userId", user.id);
+      localStorage.setItem("user", JSON.stringify(user));
 
       // Close modal
       setIsOpen(false);

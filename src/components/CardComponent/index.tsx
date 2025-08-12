@@ -1,4 +1,3 @@
-
 import { clsx } from 'clsx';
 import type { FC, JSX,ReactNode } from 'react';
 
@@ -7,7 +6,6 @@ interface CardProps {
   className?: string;
   as?: keyof JSX.IntrinsicElements;
 }
-
 
 const HeaderTitle: FC<CardProps> = ({ className, as = 'h3', children }) => {
   const Tag = as;
@@ -18,7 +16,6 @@ const HeaderTitle: FC<CardProps> = ({ className, as = 'h3', children }) => {
   );
 };
 
-
 const HeaderBase: FC<CardProps> = ({ className, children }) => {
   return (
     <div className={clsx('px-4 py-5 bg-white border-b border-gray-200 sm:px-6', className)}>
@@ -26,7 +23,6 @@ const HeaderBase: FC<CardProps> = ({ className, children }) => {
     </div>
   );
 };
-
 
 const Header = HeaderBase as FC<CardProps> & {
   Title: FC<CardProps>;
@@ -39,7 +35,6 @@ const Body: FC<CardProps> = ({ className, children }) => {
 };
 
 const Footer: FC<CardProps> = ({ className, children }) => {
-  
   return <div className={clsx('bg-white border-t border-gray-200', className)}>{children}</div>;
 };
 

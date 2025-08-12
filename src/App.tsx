@@ -3,6 +3,7 @@ import './App.css'
 import Register from "./pages/Register"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
+import PageNotFound from './components/PageNotFound';
 
 
 function App() {

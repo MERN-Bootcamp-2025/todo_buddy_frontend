@@ -12,6 +12,7 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
     if (!name || !email || !role) {
@@ -26,6 +27,16 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
     }
 
     try {
+      const userString = localStorage.getItem("user");
+      const user = userString ? JSON.parse(userString) : null;
+      console.log("userID", user.email);
+
+      if (!user || !user.email) {
+        alert("User information is missing or invalid.");
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       const response = await fetch("http://localhost:8080/api/invite", {
         method: "POST",
@@ -33,7 +44,7 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name, email, role }),
+        body: JSON.stringify({ name, email, role, password,from_email: user.email }),
       });
 
       if (!response.ok) throw new Error("Failed to invite user");
@@ -52,12 +63,9 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
       <CardComponent className="w-full max-w-md">
-        {/* Header */}
         <CardComponent.Header>
           <CardComponent.Header.Title>Invite User</CardComponent.Header.Title>
         </CardComponent.Header>
-
-        {/* Body */}
         <CardComponent.Body>
           <div className="space-y-4">
             <div>
@@ -79,6 +87,16 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full border rounded px-3 py-2"
               />
+            </div> 
+            <div>
+              <label className="block text-sm">Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
             </div>
             <div>
               <label className="block text-sm">Role</label>
@@ -94,20 +112,12 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
         </CardComponent.Body>
-
-        {/* Footer */}
         <CardComponent.Footer>
           <div className="flex justify-end gap-3 p-4">
             <Button
               onClick={onClose}
               buttonVariant="solid"
-              buttonStyle={{
-                backgroundColor: "#E5E7EB",
-                color: "black",
-                height: "40px",
-                width: "auto",
-                padding: "0.5rem 1rem",
-              }}
+              className="bg-[#E5E7EB] text-black h-10 w-auto p-2 rounded-lg"
             >
               Cancel
             </Button>
@@ -117,13 +127,8 @@ const Invite: React.FC<InviteProps> = ({ isOpen, onClose }) => {
               disabled={loading}
               isLoading={loading}
               buttonVariant="solid"
-              buttonStyle={{
-                backgroundColor: "#60A5FA",
-                color: "white",
-                height: "40px",
-                width: "auto",
-                padding: "0.5rem 1rem",
-              }}
+              className="bg-[#60A5FA] text-white h-10 w-auto p-2 rounded-lg"
+          
             >
               {loading ? "Inviting..." : "Invite"}
             </Button>
